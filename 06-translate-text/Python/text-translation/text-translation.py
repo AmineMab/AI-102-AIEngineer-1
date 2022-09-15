@@ -15,7 +15,7 @@ def main():
         translator_endpoint = 'https://api.cognitive.microsofttranslator.com'
 
         # Analyze each text file in the reviews folder
-        reviews_folder = 'reviews'
+        reviews_folder = 'C:\\Users\\R21\\Documents\\VSC-Workspace\\GitRepo\\AI-102-AIEngineer\\05-analyze-text\\Python\\text-analysis\\reviews'
         for file_name in os.listdir(reviews_folder):
             # Read the file contents
             print('\n-------------\n' + file_name)
@@ -39,6 +39,31 @@ def GetLanguage(text):
     language = 'en'
 
     # Use the Translator detect function
+    # Use the Translator detect function
+    path = '/detect'
+    url = translator_endpoint + path
+
+    # Build the request
+    params = {
+        'api-version': '3.0'
+    }
+
+    headers = {
+    'Ocp-Apim-Subscription-Key': cog_key,
+    'Ocp-Apim-Subscription-Region': cog_region,
+    'Content-type': 'application/json'
+    }
+
+    body = [{
+        'text': text
+    }]
+
+    # Send the request and get response
+    request = requests.post(url, params=params, headers=headers, json=body)
+    response = request.json()
+
+    # Parse JSON array and get language
+    language = response[0]["language"]
 
 
     # Return the language
@@ -49,7 +74,33 @@ def Translate(text, source_language):
 
     # Use the Translator translate function
 
+    # Use the Translator translate function
+    path = '/translate'
+    url = translator_endpoint + path
 
+    # Build the request
+    params = {
+        'api-version': '3.0',
+        'from': source_language,
+        'to': ['en']
+    }
+
+    headers = {
+        'Ocp-Apim-Subscription-Key': cog_key,
+        'Ocp-Apim-Subscription-Region': cog_region,
+        'Content-type': 'application/json'
+    }
+
+    body = [{
+        'text': text
+    }]
+
+    # Send the request and get response
+    request = requests.post(url, params=params, headers=headers, json=body)
+    response = request.json()
+
+    # Parse JSON array and get translation
+    translation = response[0]["translations"][0]["text"]
     # Return the translation
     return translation
 
